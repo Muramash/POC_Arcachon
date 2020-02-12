@@ -8,6 +8,7 @@
     <hr/>
 
     <div>
+      <p class="errormessage"> {{ errorMessage }}</p>
       <b-form-input v-model="text" placeholder="Enter your name"></b-form-input>
         <div class="mt-2">Météo de : {{ text }}</div>
         <p>{{ weather }} - {{ wdetails }}</p>
@@ -29,7 +30,8 @@ export default {
     return {
       text: "",
       weather: "",
-      wdetails: ""
+      wdetails: "",
+      errorMessage: ""
     }
   },
   mounted() {
@@ -40,16 +42,24 @@ export default {
       console.log(this.text)
           axios.get("http://localhost:3001/"+this.text)
       .then(response => {
+        console.log(response.data)
         this.weather = response.data.main
         this.wdetails = response.data.description
+        this.errorMessage = ""
       })
-      .catch(function (error) {console.log(error);})
+      .catch(function (error) {
+        this.errorMessage = error.message
+        console.log(error);
+        }.bind(this))
     }
   }
 }
 </script>
 
 <style>
+.errormessage{
+  color: red;
+}
 .container {
   margin: 0 auto;
   min-height: 100vh;
