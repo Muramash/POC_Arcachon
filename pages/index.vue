@@ -5,24 +5,30 @@
       <h1 class="title">
         POC_Arcachon
       </h1>
+
+      <div>
+        <b-button variant="outline-primary" v-on:click="getCity">Récupérer la position</b-button>
+        <p>Latitude : {{lat}} - Longitude : {{lon}}</p>
+      </div>
+
       <hr/>
 
       <div>
         <p class="errormessage"> {{ errorMessage }}</p>
         <b-form-input v-model="text" placeholder="Enter your name"></b-form-input>
-          <div class="mt-2">Météo de : {{ text }}</div>
+        <div class="mt-2">Météo de : {{ text }}</div>
           <p>{{ weather }} - {{ wdetails }}</p>
-        <b-button variant="outline-primary" v-on:click="meteoSearch">Récupérer la météo</b-button>
-      </div>
+          <b-button variant="outline-primary" v-on:click="meteoSearch">Récupérer la météo</b-button>
+        </div>
+
       <div>
         <b-form-input v-model="ip" placeholder="Enter your IP"></b-form-input>
-          <div class="mt-2">Votre adresse IP est : {{ ip }}</div>
+        <div class="mt-2">Votre adresse IP est : {{ ip }}</div>
           <p> Vous êtes situé à : {{ipVille}}</p>
-        <b-button variant="outline-primary" v-on:click="geoSearch">Récupérer la ville</b-button>
+          <b-button variant="outline-primary" v-on:click="geoSearch">Récupérer la ville</b-button>
+        </div>
       </div>
 
-      
-    </div>
   </div>
 </template>
 
@@ -42,9 +48,13 @@ export default {
       errorMessage: "",
       ip: "",
       ipVille: "",
+      lat: "",
+      lon: "",
+      position: "",
     }
   },
-  mounted() {
+  mounted() {  
+    this.getCity()
 
 },
   methods: {
@@ -74,6 +84,17 @@ export default {
         console.log(error);
         }.bind(this))
     },
+    getCity: function (){
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(this.tellPosition);
+      } else { 
+        x.innerHTML = "Geolocation is not supported by this browser.";
+      }
+    },
+    tellPosition: function(position){
+      this.lat = position.coords.latitude;
+      this.lon = position.coords.longitude;
+    }
   }
 }
 </script>
