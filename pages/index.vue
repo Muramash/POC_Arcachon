@@ -5,15 +5,23 @@
       <h1 class="title">
         POC_Arcachon
       </h1>
-    <hr/>
+      <hr/>
 
-    <div>
-      <p class="errormessage"> {{ errorMessage }}</p>
-      <b-form-input v-model="text" placeholder="Enter your name"></b-form-input>
-        <div class="mt-2">Météo de : {{ text }}</div>
-        <p>{{ weather }} - {{ wdetails }}</p>
-      <b-button variant="outline-primary" v-on:click="meteoSearch">Récupérer la météo</b-button>
-    </div>
+      <div>
+        <p class="errormessage"> {{ errorMessage }}</p>
+        <b-form-input v-model="text" placeholder="Enter your name"></b-form-input>
+          <div class="mt-2">Météo de : {{ text }}</div>
+          <p>{{ weather }} - {{ wdetails }}</p>
+        <b-button variant="outline-primary" v-on:click="meteoSearch">Récupérer la météo</b-button>
+      </div>
+      <div>
+        <b-form-input v-model="ip" placeholder="Enter your IP"></b-form-input>
+          <div class="mt-2">Votre adresse IP est : {{ ip }}</div>
+          <p> Vous êtes situé à : {{ipVille}}</p>
+        <b-button variant="outline-primary" v-on:click="geoSearch">Récupérer la ville</b-button>
+      </div>
+
+      
     </div>
   </div>
 </template>
@@ -31,16 +39,18 @@ export default {
       text: "",
       weather: "",
       wdetails: "",
-      errorMessage: ""
+      errorMessage: "",
+      ip: "",
+      ipVille: "",
     }
   },
   mounted() {
 
-  },
+},
   methods: {
     meteoSearch: function (event){
       console.log(this.text)
-          axios.get("http://localhost:3001/"+this.text)
+          axios.get("http://localhost:3072/"+this.text)
       .then(response => {
         console.log(response.data)
         this.weather = response.data.main
@@ -51,7 +61,19 @@ export default {
         this.errorMessage = error.message
         console.log(error);
         }.bind(this))
-    }
+    },
+    geoSearch: function (event){
+      console.log(this.ip)
+          axios.get("http://localhost:3030/"+this.ip)
+      .then(response => {
+        console.log(response.data)
+        this.ipVille = response.data;
+      })
+      .catch(function (error) {
+        this.errorMessage = error.message
+        console.log(error);
+        }.bind(this))
+    },
   }
 }
 </script>
